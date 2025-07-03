@@ -20,84 +20,87 @@ if (!$player) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
         }
         
-        .game-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin: 2rem 0;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
         }
         
-        .click-button {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            border: none;
-            font-size: 4rem;
-            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+        .header {
+            background-color: #4CAF50;
             color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            padding: 20px;
+            text-align: center;
+            border: 2px solid #333;
+            margin-bottom: 20px;
         }
         
-        .click-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-        }
-        
-        .click-button:active {
-            transform: scale(0.95);
-        }
-        
-        .stats-card {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
+        .game-box {
+            background-color: white;
+            border: 3px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
             text-align: center;
         }
         
-        .stats-value {
-            font-size: 2rem;
+        .click-button {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #333;
+            font-size: 3rem;
+            background-color: #FFD700;
+            cursor: pointer;
+            margin: 20px auto;
+        }
+        
+        .click-button:hover {
+            background-color: #FFA500;
+        }
+        
+        .stats-box {
+            background-color: #E3F2FD;
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        
+        .stats-number {
+            font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 0.5rem;
+            color: #333;
         }
         
         .stats-label {
             font-size: 0.9rem;
-            opacity: 0.8;
+            color: #666;
         }
         
         .nav-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
+            background-color: #2196F3;
             color: white;
-            padding: 0.8rem 2rem;
-            border-radius: 25px;
-            font-weight: bold;
-            transition: all 0.3s ease;
+            padding: 10px 20px;
+            border: 2px solid #333;
             text-decoration: none;
-            display: inline-block;
+            font-weight: bold;
         }
         
         .nav-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background-color: #1976D2;
             color: white;
             text-decoration: none;
         }
         
         .floating-coin {
             position: absolute;
-            font-size: 1.5rem;
-            color: #ffd700;
+            font-size: 1.2rem;
+            color: #FFD700;
             font-weight: bold;
             pointer-events: none;
             animation: floatUp 1s ease-out forwards;
@@ -110,20 +113,38 @@ if (!$player) {
             }
             100% {
                 opacity: 0;
-                transform: translateY(-50px);
+                transform: translateY(-30px);
             }
         }
         
-        .progress-bar {
-            background: linear-gradient(90deg, #ff6b6b, #ffa726);
-            height: 8px;
-            border-radius: 4px;
+        .info-box {
+            background-color: #FFF3E0;
+            border: 2px solid #333;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+            color: #333;
         }
         
-        .auto-clicker {
-            font-size: 0.8rem;
-            color: #28a745;
-            margin-top: 0.5rem;
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .col {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        
+        h3 {
+            margin: 10px 0;
+            font-size: 1.3rem;
         }
     </style>
 </head>
