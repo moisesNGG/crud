@@ -88,116 +88,253 @@ $playerItems = getPlayerItems($pdo);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
         }
         
-        .store-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin: 2rem 0;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background-color: #FF9800;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid #333;
+            margin-bottom: 20px;
         }
         
         .nav-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
+            background-color: #2196F3;
             color: white;
-            padding: 0.8rem 2rem;
-            border-radius: 25px;
-            font-weight: bold;
-            transition: all 0.3s ease;
+            padding: 10px 20px;
+            border: 2px solid #333;
             text-decoration: none;
-            display: inline-block;
+            font-weight: bold;
         }
         
         .nav-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background-color: #1976D2;
             color: white;
             text-decoration: none;
         }
         
-        .player-stats {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+        .stats-box {
+            background-color: white;
+            border: 2px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
             text-align: center;
         }
         
-        .item-card {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+        .stats-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
         }
         
-        .item-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        .stat-item {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .store-box {
+            background-color: white;
+            border: 2px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .item-card {
+            background-color: #f9f9f9;
+            border: 2px solid #ccc;
+            padding: 15px;
+            text-align: center;
         }
         
         .item-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .item-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .item-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
         }
         
         .item-price {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: bold;
-            color: #ff6b6b;
+            color: #E91E63;
+            margin-bottom: 10px;
         }
         
         .item-benefit {
-            color: #28a745;
+            color: #4CAF50;
             font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
         }
         
         .buy-button {
-            background: linear-gradient(45deg, #ff6b6b, #ffa726);
-            border: none;
+            background-color: #4CAF50;
             color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 25px;
+            border: 2px solid #333;
+            padding: 8px 16px;
             font-weight: bold;
-            transition: all 0.3s ease;
+            cursor: pointer;
         }
         
         .buy-button:hover {
-            transform: scale(1.05);
-            color: white;
+            background-color: #45a049;
         }
         
         .buy-button:disabled {
-            background: #ccc;
-            transform: none;
+            background-color: #ccc;
             cursor: not-allowed;
         }
         
+        .admin-box {
+            background-color: #FFF9C4;
+            border: 2px solid #333;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #ccc;
+            font-size: 14px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .btn {
+            background-color: #2196F3;
+            color: white;
+            border: 2px solid #333;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: #1976D2;
+        }
+        
+        .btn-success {
+            background-color: #4CAF50;
+        }
+        
+        .btn-success:hover {
+            background-color: #45a049;
+        }
+        
+        .btn-danger {
+            background-color: #f44336;
+        }
+        
+        .btn-danger:hover {
+            background-color: #da190b;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #333;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
         .owned-items {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 1rem;
-            margin-bottom: 1rem;
+            background-color: #f0f0f0;
+            border: 2px solid #ccc;
+            padding: 15px;
+            margin-top: 20px;
         }
         
-        .admin-section {
-            background: #fff3cd;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-top: 2rem;
+        .owned-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
         }
         
-        .alert-custom {
-            border-radius: 10px;
-            padding: 1rem;
-            margin-bottom: 1rem;
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th, .table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        
+        h1, h2, h3 {
+            color: #333;
         }
     </style>
 </head>
