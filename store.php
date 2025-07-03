@@ -20,6 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->execute([$itemId, $quantity]);
                     $result = $stmt->fetch(PDO::FETCH_ASSOC);
                     
+                    // IMPORTANTE: Cerrar el cursor para evitar errores
+                    $stmt->closeCursor();
+                    
                     if ($result['result'] === 'SUCCESS') {
                         $message = $result['message'];
                         $messageType = 'success';
