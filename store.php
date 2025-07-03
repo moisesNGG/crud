@@ -341,242 +341,189 @@ $playerItems = getPlayerItems($pdo);
 <body>
     <div class="container">
         <!-- Header -->
-        <div class="row justify-content-center mt-4">
-            <div class="col-12 text-center">
-                <h1 class="text-white mb-4">🛍️ Tienda del Clicker</h1>
-                <a href="index.php" class="nav-button">
-                    <i class="fas fa-gamepad"></i> Volver al Juego
-                </a>
-            </div>
+        <div class="header">
+            <h1>🛍️ Tienda del Juego</h1>
+            <a href="index.php" class="nav-button">VOLVER AL JUEGO</a>
         </div>
 
         <!-- Player Stats -->
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="player-stats">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <h4><?php echo formatNumber($player['total_coins']); ?></h4>
-                            <p>💰 Monedas</p>
-                        </div>
-                        <div class="col-md-3">
-                            <h4><?php echo formatNumber($player['coins_per_click']); ?></h4>
-                            <p>🖱️ Por Click</p>
-                        </div>
-                        <div class="col-md-3">
-                            <h4><?php echo formatNumber($player['coins_per_second']); ?></h4>
-                            <p>⏱️ Por Segundo</p>
-                        </div>
-                        <div class="col-md-3">
-                            <h4><?php echo number_format($player['total_clicks']); ?></h4>
-                            <p>👆 Clicks Totales</p>
-                        </div>
-                    </div>
+        <div class="stats-box">
+            <h3>📊 Tus Estadísticas</h3>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-number"><?php echo formatNumber($player['total_coins']); ?></div>
+                    <div class="stat-label">💰 Monedas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number"><?php echo formatNumber($player['coins_per_click']); ?></div>
+                    <div class="stat-label">🖱️ Por Click</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number"><?php echo formatNumber($player['coins_per_second']); ?></div>
+                    <div class="stat-label">⏱️ Por Segundo</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number"><?php echo number_format($player['total_clicks']); ?></div>
+                    <div class="stat-label">👆 Clicks</div>
                 </div>
             </div>
         </div>
 
         <!-- Messages -->
         <?php if ($message): ?>
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="alert alert-custom alert-<?php echo $messageType === 'success' ? 'success' : 'danger'; ?>">
-                        <i class="fas fa-<?php echo $messageType === 'success' ? 'check-circle' : 'exclamation-triangle'; ?>"></i>
-                        <?php echo htmlspecialchars($message); ?>
-                    </div>
-                </div>
+            <div class="alert alert-<?php echo $messageType === 'success' ? 'success' : 'danger'; ?>">
+                <strong><?php echo $messageType === 'success' ? '✅ Éxito:' : '❌ Error:'; ?></strong>
+                <?php echo htmlspecialchars($message); ?>
             </div>
         <?php endif; ?>
 
         <!-- Store Items -->
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="store-container">
-                    <h3 class="text-center mb-4">🛒 Items Disponibles</h3>
-                    
-                    <?php if (empty($storeItems)): ?>
-                        <div class="text-center">
-                            <p>No hay items disponibles en la tienda.</p>
+        <div class="store-box">
+            <h3>🛒 Items para Comprar</h3>
+            
+            <?php if (empty($storeItems)): ?>
+                <p>No hay items disponibles.</p>
+            <?php else: ?>
+                <div class="item-grid">
+                    <?php foreach ($storeItems as $item): ?>
+                        <div class="item-card">
+                            <div class="item-icon">
+                                <?php echo $item['image_url'] ?: '📦'; ?>
+                            </div>
+                            <div class="item-name"><?php echo htmlspecialchars($item['name']); ?></div>
+                            <div class="item-description"><?php echo htmlspecialchars($item['description']); ?></div>
+                            
+                            <div class="item-price">
+                                💰 <?php echo formatNumber($item['price']); ?>
+                            </div>
+                            
+                            <div class="item-benefit">
+                                <?php if ($item['benefit_per_click'] > 0): ?>
+                                    🖱️ +<?php echo formatNumber($item['benefit_per_click']); ?> por click<br>
+                                <?php endif; ?>
+                                <?php if ($item['benefit_per_second'] > 0): ?>
+                                    ⏱️ +<?php echo formatNumber($item['benefit_per_second']); ?> por segundo
+                                <?php endif; ?>
+                            </div>
+                            
+                            <form method="POST">
+                                <input type="hidden" name="action" value="buy_item">
+                                <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="buy-button" 
+                                    <?php echo $player['total_coins'] < $item['price'] ? 'disabled' : ''; ?>>
+                                    COMPRAR
+                                </button>
+                            </form>
                         </div>
-                    <?php else: ?>
-                        <div class="row">
-                            <?php foreach ($storeItems as $item): ?>
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="item-card text-center">
-                                        <div class="item-icon">
-                                            <?php echo $item['image_url'] ?: '📦'; ?>
-                                        </div>
-                                        <h5><?php echo htmlspecialchars($item['name']); ?></h5>
-                                        <p class="text-muted"><?php echo htmlspecialchars($item['description']); ?></p>
-                                        
-                                        <div class="item-price mb-2">
-                                            💰 <?php echo formatNumber($item['price']); ?>
-                                        </div>
-                                        
-                                        <div class="item-benefit mb-3">
-                                            <?php if ($item['benefit_per_click'] > 0): ?>
-                                                <div>🖱️ +<?php echo formatNumber($item['benefit_per_click']); ?> por click</div>
-                                            <?php endif; ?>
-                                            <?php if ($item['benefit_per_second'] > 0): ?>
-                                                <div>⏱️ +<?php echo formatNumber($item['benefit_per_second']); ?> por segundo</div>
-                                            <?php endif; ?>
-                                        </div>
-                                        
-                                        <form method="POST" style="display: inline;">
-                                            <input type="hidden" name="action" value="buy_item">
-                                            <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>">
-                                            <input type="hidden" name="quantity" value="1">
-                                            <button type="submit" class="buy-button" 
-                                                <?php echo $player['total_coins'] < $item['price'] ? 'disabled' : ''; ?>>
-                                                <i class="fas fa-shopping-cart"></i> Comprar
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
+                    <?php endforeach; ?>
                 </div>
-            </div>
+            <?php endif; ?>
         </div>
 
         <!-- Player Items -->
         <?php if (!empty($playerItems)): ?>
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="store-container">
-                        <h3 class="text-center mb-4">📦 Items Comprados</h3>
-                        <div class="owned-items">
-                            <?php foreach ($playerItems as $item): ?>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <div>
-                                        <span class="mr-2"><?php echo $item['image_url'] ?: '📦'; ?></span>
-                                        <strong><?php echo htmlspecialchars($item['name']); ?></strong>
-                                        <span class="text-muted">(x<?php echo $item['quantity']; ?>)</span>
-                                    </div>
-                                    <div class="text-right">
-                                        <?php if ($item['benefit_per_click'] > 0): ?>
-                                            <small class="text-success">🖱️ +<?php echo formatNumber($item['benefit_per_click'] * $item['quantity']); ?></small><br>
-                                        <?php endif; ?>
-                                        <?php if ($item['benefit_per_second'] > 0): ?>
-                                            <small class="text-success">⏱️ +<?php echo formatNumber($item['benefit_per_second'] * $item['quantity']); ?></small>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
+            <div class="store-box">
+                <h3>📦 Items que Tienes</h3>
+                <div class="owned-items">
+                    <?php foreach ($playerItems as $item): ?>
+                        <div class="owned-item">
+                            <div>
+                                <span><?php echo $item['image_url'] ?: '📦'; ?></span>
+                                <strong><?php echo htmlspecialchars($item['name']); ?></strong>
+                                <span>(Cantidad: <?php echo $item['quantity']; ?>)</span>
+                            </div>
+                            <div>
+                                <?php if ($item['benefit_per_click'] > 0): ?>
+                                    <small>🖱️ +<?php echo formatNumber($item['benefit_per_click'] * $item['quantity']); ?></small><br>
+                                <?php endif; ?>
+                                <?php if ($item['benefit_per_second'] > 0): ?>
+                                    <small>⏱️ +<?php echo formatNumber($item['benefit_per_second'] * $item['quantity']); ?></small>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         <?php endif; ?>
 
         <!-- Admin Section -->
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="admin-section">
-                    <h4 class="text-center mb-4">⚙️ Panel de Administración</h4>
-                    
-                    <!-- Add Item Form -->
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <h5>📝 Agregar Nuevo Item</h5>
-                        </div>
-                        <div class="card-body">
-                            <form method="POST">
-                                <input type="hidden" name="action" value="add_item">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Nombre del Item</label>
-                                            <input type="text" name="item_name" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Precio</label>
-                                            <input type="number" step="0.01" name="item_price" class="form-control" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Descripción</label>
-                                    <textarea name="item_description" class="form-control" rows="2"></textarea>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Beneficio por Click</label>
-                                            <input type="number" step="0.01" name="benefit_click" class="form-control" value="0">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Beneficio por Segundo</label>
-                                            <input type="number" step="0.01" name="benefit_second" class="form-control" value="0">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Emoji/Icono</label>
-                                            <input type="text" name="image_url" class="form-control" placeholder="🎮">
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-plus"></i> Agregar Item
-                                </button>
-                            </form>
-                        </div>
+        <div class="admin-box">
+            <h3>⚙️ Administración de la Tienda</h3>
+            
+            <!-- Add Item Form -->
+            <h4>📝 Agregar Nuevo Item</h4>
+            <form method="POST">
+                <input type="hidden" name="action" value="add_item">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nombre del Item</label>
+                        <input type="text" name="item_name" class="form-control" required>
                     </div>
-
-                    <!-- Manage Items -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>📋 Gestionar Items</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Nombre</th>
-                                            <th>Precio</th>
-                                            <th>Beneficio Click</th>
-                                            <th>Beneficio Segundo</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($storeItems as $item): ?>
-                                            <tr>
-                                                <td><?php echo $item['id']; ?></td>
-                                                <td>
-                                                    <span class="mr-2"><?php echo $item['image_url'] ?: '📦'; ?></span>
-                                                    <?php echo htmlspecialchars($item['name']); ?>
-                                                </td>
-                                                <td><?php echo formatNumber($item['price']); ?></td>
-                                                <td><?php echo formatNumber($item['benefit_per_click']); ?></td>
-                                                <td><?php echo formatNumber($item['benefit_per_second']); ?></td>
-                                                <td>
-                                                    <form method="POST" style="display: inline;">
-                                                        <input type="hidden" name="action" value="delete_item">
-                                                        <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>">
-                                                        <button type="submit" class="btn btn-danger btn-sm" 
-                                                                onclick="return confirm('¿Estás seguro de eliminar este item?')">
-                                                            <i class="fas fa-trash"></i> Eliminar
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label>Precio</label>
+                        <input type="number" step="0.01" name="item_price" class="form-control" required>
                     </div>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <input type="text" name="item_description" class="form-control">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Beneficio por Click</label>
+                        <input type="number" step="0.01" name="benefit_click" class="form-control" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Beneficio por Segundo</label>
+                        <input type="number" step="0.01" name="benefit_second" class="form-control" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Emoji/Icono</label>
+                        <input type="text" name="image_url" class="form-control" placeholder="🎮">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success">AGREGAR ITEM</button>
+            </form>
+
+            <!-- Manage Items -->
+            <h4 style="margin-top: 30px;">📋 Gestionar Items</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Beneficio Click</th>
+                        <th>Beneficio Segundo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($storeItems as $item): ?>
+                        <tr>
+                            <td><?php echo $item['id']; ?></td>
+                            <td>
+                                <?php echo $item['image_url'] ?: '📦'; ?>
+                                <?php echo htmlspecialchars($item['name']); ?>
+                            </td>
+                            <td><?php echo formatNumber($item['price']); ?></td>
+                            <td><?php echo formatNumber($item['benefit_per_click']); ?></td>
+                            <td><?php echo formatNumber($item['benefit_per_second']); ?></td>
+                            <td>
+                                <form method="POST" style="display: inline;">
+                                    <input type="hidden" name="action" value="delete_item">
+                                    <input type="hidden" name="item_id" value="<?php echo $item['id']; ?>">
+                                    <button type="submit" class="btn btn-danger" 
+                                            onclick="return confirm('¿Seguro que quieres eliminar este item?')">
+                                        ELIMINAR
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
     </div>
 
