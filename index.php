@@ -226,7 +226,6 @@ if (!$player) {
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     
     <script>
         // Variables del juego
@@ -239,7 +238,7 @@ if (!$player) {
         
         let saveTimeout;
         
-        // Función para formatear números grandes
+        // Función para formatear números
         function formatNumber(num) {
             if (num >= 1000000000) {
                 return (num / 1000000000).toFixed(1) + 'B';
@@ -252,7 +251,7 @@ if (!$player) {
             }
         }
         
-        // Actualizar UI
+        // Actualizar números en pantalla
         function updateUI() {
             $('#totalCoins').text(formatNumber(playerData.totalCoins));
             $('#coinsPerClick').text(formatNumber(playerData.coinsPerClick));
@@ -287,41 +286,28 @@ if (!$player) {
                         totalClicks: playerData.totalClicks
                     },
                     success: function(response) {
-                        console.log('Progreso guardado automáticamente');
-                    },
-                    error: function() {
-                        console.log('Error al guardar progreso');
+                        console.log('Progreso guardado');
                     }
                 });
             }, 1000);
         }
         
-        // Evento de click
+        // Cuando haces click
         $('#clickButton').click(function(e) {
-            const rect = e.target.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            // Agregar monedas por click
             playerData.totalCoins += playerData.coinsPerClick;
             playerData.totalClicks++;
             
-            // Mostrar efecto visual
+            // Mostrar monedas flotantes
             showFloatingCoins(e.clientX, e.clientY, playerData.coinsPerClick);
             
-            // Actualizar UI
+            // Actualizar pantalla
             updateUI();
             
             // Guardar progreso
             saveProgress();
-            
-            // Efecto de vibración en móvil
-            if (navigator.vibrate) {
-                navigator.vibrate(50);
-            }
         });
         
-        // Generación automática (cada segundo)
+        // Generación automática cada segundo
         setInterval(function() {
             if (playerData.coinsPerSecond > 0) {
                 playerData.totalCoins += playerData.coinsPerSecond;
@@ -330,7 +316,7 @@ if (!$player) {
             }
         }, 1000);
         
-        // Inicializar UI
+        // Inicializar
         updateUI();
     </script>
 </body>
