@@ -15,19 +15,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             if ($itemId > 0 && $quantity > 0) {
                 try {
-                    // Llamar al procedimiento almacenado para comprar item
-                    $stmt = $pdo->prepare("CALL BuyItem(1, ?, ?)");
-                    $stmt->execute([$itemId, $quantity]);
-                    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                    // Obtener datos del item
+                    $stmt = $pdo->prepare("SELECT * FROM store_items WHERE id = ? AND is_active = TRUE");
+                    $stmt->execute([$itemId]);
+                    $item = $stmt->fetch(PDO::FETCH_ASSOC);
                     
-                    // IMPORTANTE: Cerrar el cursor para evitar errores
-                    $stmt->closeCursor();
+                    if (!$item) {
+                        $message = 'Item no encontrado';
+                        $messageType = 'error';
+                        break;
+                    }
                     
-                    if ($result['result'] === 'SUCCESS') {
-                        $message = $result['message'];
+                    // Obtener datos del jugador
+                    $player = getPlayerProgress($pdo);
+                    $totalCost = $item['price'] * $quantity;
+                    
+                    // Verificar si tiene suficientes monedas
+                    if ($player['total_coins'] >= $totalCost) {
+                        // Actualizar monedas y beneficios del jugador
+                        $newCoins = $player['total_coins'] - $totalCost;
+                        $newClickBonus = $player['coins_per_click'] + ($item['benefit_per_click'] * $quantity);
+                        $newSecondBonus = $player['coins_per_second'] + ($item['benefit_per_second'] * $quantity);
+                        
+                        $stmt = $pdo->prepare("UPDATE player_progress SET total_coins = ?, coins_per_click = ?, coins_per_second = ? WHERE id = 1");
+                        $stmt->execute([$newCoins, $newClickBonus, $newSecondBonus]);
+                        
+                        // Registrar la compra
+                        $stmt = $pdo->prepare("INSERT INTO player_items (player_id, item_id, quantity) VALUES (1, ?, ?)");
+                        $stmt->execute([$itemId, $quantity]);
+                        
+                        $message = 'Item comprado exitosamente!';
                         $messageType = 'success';
                     } else {
-                        $message = $result['message'];
+                        $message = 'No tienes suficientes monedas';
                         $messageType = 'error';
                     }
                 } catch (PDOException $e) {
