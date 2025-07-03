@@ -151,105 +151,76 @@ if (!$player) {
 <body>
     <div class="container">
         <!-- Header -->
-        <div class="row justify-content-center mt-4">
-            <div class="col-12 text-center">
-                <h1 class="text-white mb-4">🍪 Cookie Clicker Game</h1>
-                <a href="store.php" class="nav-button">
-                    <i class="fas fa-store"></i> Ir a la Tienda
-                </a>
-            </div>
+        <div class="header">
+            <h1>🍪 Juego del Click</h1>
+            <a href="store.php" class="nav-button">IR A LA TIENDA</a>
         </div>
 
-        <!-- Main Game Area -->
-        <div class="row justify-content-center">
-            <div class="col-lg-4 col-md-6">
-                <div class="game-container text-center">
-                    <h3 class="mb-4">¡Haz Click para Ganar Monedas!</h3>
-                    
-                    <!-- Click Button -->
-                    <div class="mb-4 position-relative" id="clickArea">
-                        <button id="clickButton" class="click-button">
-                            🍪
-                        </button>
-                    </div>
-                    
-                    <!-- Stats -->
-                    <div class="stats-card">
-                        <div class="stats-value" id="totalCoins">
+        <!-- Main Game -->
+        <div class="game-box">
+            <h3>¡Haz Click en la Galleta!</h3>
+            
+            <!-- Click Button -->
+            <div id="clickArea" style="position: relative;">
+                <button id="clickButton" class="click-button">🍪</button>
+            </div>
+            
+            <!-- Stats -->
+            <div class="row">
+                <div class="col">
+                    <div class="stats-box">
+                        <div class="stats-number" id="totalCoins">
                             <?php echo formatNumber($player['total_coins']); ?>
                         </div>
-                        <div class="stats-label">💰 Monedas Totales</div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="stats-card">
-                                <div class="stats-value" id="coinsPerClick">
-                                    <?php echo formatNumber($player['coins_per_click']); ?>
-                                </div>
-                                <div class="stats-label">🖱️ Por Click</div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="stats-card">
-                                <div class="stats-value" id="coinsPerSecond">
-                                    <?php echo formatNumber($player['coins_per_second']); ?>
-                                </div>
-                                <div class="stats-label">⏱️ Por Segundo</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="stats-card">
-                                <div class="stats-value" id="totalClicks">
-                                    <?php echo number_format($player['total_clicks']); ?>
-                                </div>
-                                <div class="stats-label">👆 Clicks Totales</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Auto-clicker info -->
-                    <div class="auto-clicker" id="autoClickerInfo">
-                        <?php if ($player['coins_per_second'] > 0): ?>
-                            <i class="fas fa-cog fa-spin"></i> 
-                            Generando automáticamente: <?php echo formatNumber($player['coins_per_second']); ?> monedas/segundo
-                        <?php else: ?>
-                            <i class="fas fa-info-circle"></i> 
-                            ¡Compra items en la tienda para generar monedas automáticamente!
-                        <?php endif; ?>
+                        <div class="stats-label">💰 Monedas</div>
                     </div>
                 </div>
+                <div class="col">
+                    <div class="stats-box">
+                        <div class="stats-number" id="coinsPerClick">
+                            <?php echo formatNumber($player['coins_per_click']); ?>
+                        </div>
+                        <div class="stats-label">🖱️ Por Click</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col">
+                    <div class="stats-box">
+                        <div class="stats-number" id="coinsPerSecond">
+                            <?php echo formatNumber($player['coins_per_second']); ?>
+                        </div>
+                        <div class="stats-label">⏱️ Por Segundo</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="stats-box">
+                        <div class="stats-number" id="totalClicks">
+                            <?php echo number_format($player['total_clicks']); ?>
+                        </div>
+                        <div class="stats-label">👆 Clicks</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info -->
+            <div class="info-box">
+                <?php if ($player['coins_per_second'] > 0): ?>
+                    ⚡ Generando: <?php echo formatNumber($player['coins_per_second']); ?> monedas/segundo
+                <?php else: ?>
+                    💡 Tip: Compra items en la tienda para generar monedas automáticamente
+                <?php endif; ?>
             </div>
         </div>
 
-        <!-- Game Info -->
-        <div class="row justify-content-center mt-4">
-            <div class="col-lg-8">
-                <div class="game-container">
-                    <h4 class="text-center mb-3">📊 Estadísticas del Juego</h4>
-                    <div class="row text-center">
-                        <div class="col-md-3">
-                            <h5>🎯 Objetivo</h5>
-                            <p>Hacer click en la galleta para ganar monedas y comprar mejoras</p>
-                        </div>
-                        <div class="col-md-3">
-                            <h5>🛍️ Tienda</h5>
-                            <p>Compra items que te den más monedas por click o automáticamente</p>
-                        </div>
-                        <div class="col-md-3">
-                            <h5>💾 Progreso</h5>
-                            <p>Tu progreso se guarda automáticamente cada vez que haces click</p>
-                        </div>
-                        <div class="col-md-3">
-                            <h5>🚀 Estrategia</h5>
-                            <p>Equilibra entre mejoras de click y generación automática</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Instructions -->
+        <div class="game-box">
+            <h3>📋 Instrucciones</h3>
+            <p><strong>1.</strong> Haz click en la galleta para ganar monedas</p>
+            <p><strong>2.</strong> Ve a la tienda para comprar mejoras</p>
+            <p><strong>3.</strong> Las mejoras te dan más monedas por click o automáticamente</p>
+            <p><strong>4.</strong> Tu progreso se guarda automáticamente</p>
         </div>
     </div>
 
