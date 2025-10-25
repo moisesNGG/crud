@@ -1,4 +1,4 @@
-# 🍪 Clicker Game con Tienda
+
 
 Un juego clicker completo con sistema de tienda desarrollado en PHP + MySQL. ¡Haz click para ganar monedas y compra mejoras para hacer crecer tu imperio!
 
